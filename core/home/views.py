@@ -29,3 +29,11 @@ from wsgiref.util import FileWrapper
 # for checking face simmilarity
 import scipy.spatial.distance as dist
 
+# ReGEx required for getting photo name
+post_type = re.compile(r"static/images/(.*)")
+
+# Required for image processing
+import face_recognition
+import cv2
+from sklearn.cluster import DBSCAN
+import numpy as np
