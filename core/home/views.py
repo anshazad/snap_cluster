@@ -5,6 +5,7 @@ from django.contrib.auth import logout, login
 from django.http import HttpResponse
 from home.models import Photo, Person, PersonGallery
 import re
+
 import string
 import random
 
@@ -28,6 +29,7 @@ from wsgiref.util import FileWrapper
 # for checking face simmilarity
 import scipy.spatial.distance as dist
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 # Create your views here.
 def landing(request):
@@ -302,6 +304,8 @@ def downloadZIP(request, pk):
 
     return response
 =======
+=======
+>>>>>>> main
 # ReGEx required for getting photo name
 post_type = re.compile(r"static/images/(.*)")
 
@@ -309,5 +313,9 @@ post_type = re.compile(r"static/images/(.*)")
 import face_recognition
 import cv2
 from sklearn.cluster import DBSCAN
+<<<<<<< HEAD
 import numpy as np
 >>>>>>> 355bf48 (added libraries)
+=======
+import numpy as np
+>>>>>>> main
