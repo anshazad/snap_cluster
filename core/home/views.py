@@ -4,13 +4,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
 from django.http import HttpResponse
 from home.models import Photo, Person, PersonGallery
-import re
-
 import string
 import random
-
-# ReGEx required for getting photo name
-post_type = re.compile(r"static/images/(.*)")
 
 # Required for image processing
 import face_recognition
@@ -29,21 +24,15 @@ from wsgiref.util import FileWrapper
 # for checking face simmilarity
 import scipy.spatial.distance as dist
 
+
+# ReGEx required for getting photo name
+post_type = re.compile(r"static/images/(.*)")
+
+
 # Create your views here.
 def landing(request):
     return render(request, "landing.html")
 
-def loginUser(request):
-    if request.method == "POST":
-        roomcode = request.POST.get("roomCode")
-        password = request.POST.get("inputPassword")
-        user = authenticate(username=roomcode, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect("/")
-        else:
-            return render(request, "login.html")
-    return render(request, "login.html")
 
 def index(request):
     user = request.user
@@ -63,6 +52,7 @@ def index(request):
     context = {"photos": photos, "count": count}
     return render(request, "index.html", context)
 
+
 def loginUser(request):
     if request.method == "POST":
         roomcode = request.POST.get("roomCode")
@@ -75,9 +65,10 @@ def loginUser(request):
             return render(request, "login.html")
     return render(request, "login.html")
 
+
 def logoutUser(request):
     logout(request)
-    return redirect("/login")
+    return redirect("/landing")
 
 
 def registerUser(request):
@@ -87,6 +78,7 @@ def registerUser(request):
 
     return render(request, "register.html", context)
 
+
 def registerUser2(request):
     if request.method == "POST":
         roomcode = res
@@ -94,6 +86,21 @@ def registerUser2(request):
         user = User.objects.create_user(roomcode, "", password)
         user.save()
         return redirect("/login")
+
+
+def viewPhoto(request, pk):
+    photo = Photo.objects.get(id=pk)
+    return render(request, "photo.html", {"photo": photo})
+
+
+def deletePhoto(request, pk):
+    user = request.user
+    photos = Photo.objects.filter(user=user)
+    if request.method == "POST":
+        photo = photos.get(id=pk)
+        photo.delete()
+    return redirect("index")
+
 
 def process(request):
     user = request.user
@@ -128,6 +135,7 @@ def process(request):
             for (box, enc) in zip(boxes, encodings)
         ]
         data.extend(d)
+
     data = np.array(data)
     encodings = [d["encoding"] for d in data]
     # cluster the embeddings
